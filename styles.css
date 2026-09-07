@@ -506,12 +506,6 @@ h6 {
   z-index: 1;
 }
 
-.hero__paw--1 {
-  top: 15%;
-  left: -10px;
-  transform: rotate(-20deg);
-}
-
 .hero__paw--2 {
   bottom: 20%;
   right: 10px;
@@ -621,7 +615,7 @@ h6 {
    SERVICES
    ============================================ */
 .services {
-  padding: 60px 0;
+  padding: 48px 0;
   background-color: var(--turquoise-light);
   position: relative;
   overflow: hidden;
@@ -635,7 +629,7 @@ h6 {
 
 .services__header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .services__header .section-subtitle {
@@ -643,25 +637,29 @@ h6 {
 }
 
 .services__list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
   max-width: 680px;
   margin: 0 auto;
 }
 
 .services__item {
   display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 24px 0;
-  border-bottom: 1px solid var(--beige);
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background-color: var(--turquoise-light);
+  transition: all var(--transition);
 }
 
-.services__item:last-child {
-  border-bottom: none;
+.services__item:hover {
+  transform: translateX(4px);
 }
 
 .services__item-icon {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   background-color: var(--turquoise-light);
   border-radius: 50%;
   display: flex;
@@ -671,15 +669,18 @@ h6 {
 }
 
 .services__item-title {
+  font-family: var(--font-serif);
   font-size: 1.125rem;
+  font-weight: 600;
   color: var(--text);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  letter-spacing: -0.01em;
 }
 
 .services__item-desc {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   color: var(--text-light);
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 /* ============================================
@@ -790,6 +791,13 @@ h6 {
   bottom: 0;
   width: 400px;
   opacity: 0.3;
+  transform: scale(1);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.trust--visible .trust__bg-img--left {
+  opacity: 1;
+  transform: scale(1.05);
 }
 
 .trust__container {
@@ -1457,8 +1465,13 @@ h6 {
     width: auto;
   }
 
+  .services__list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
   .services__item {
-    padding: 28px 0;
+    padding: 20px;
   }
 
   .process__step {

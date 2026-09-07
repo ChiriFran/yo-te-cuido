@@ -253,6 +253,32 @@
     setupCardSlider('value');
     setupCardSlider('process');
 
+    /* ---------- Trust Section Background Opacity ---------- */
+    function setupTrustBgOpacity() {
+        var trustSection = document.querySelector('.trust');
+        if (!trustSection) return;
+
+        var observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.2
+        };
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    trustSection.classList.add('trust--visible');
+                } else {
+                    trustSection.classList.remove('trust--visible');
+                }
+            });
+        }, observerOptions);
+
+        observer.observe(trustSection);
+    }
+
+    setupTrustBgOpacity();
+
     /* ---------- Testimonial Slider ---------- */
     function setupTestimonialSlider() {
         var track = document.querySelector('.testimonial__track');
