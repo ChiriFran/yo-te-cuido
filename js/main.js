@@ -6,11 +6,11 @@
     'use strict';
 
     /* ---------- DOM Elements ---------- */
-    const header = document.getElementById('header');
-    const hamburger = document.getElementById('hamburger');
-    const nav = document.getElementById('nav');
-    const navLinks = nav ? nav.querySelectorAll('.header__nav-link') : [];
-    const currentYearEl = document.getElementById('current-year');
+    var header = document.getElementById('header');
+    var hamburger = document.getElementById('hamburger');
+    var nav = document.getElementById('nav');
+    var navLinks = nav ? nav.querySelectorAll('.header__nav-link') : [];
+    var currentYearEl = document.getElementById('current-year');
 
     /* ---------- Mobile Menu ---------- */
     function openMenu() {
@@ -41,6 +41,25 @@
 
     navLinks.forEach(function (link) {
         link.addEventListener('click', closeMenu);
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', function (e) {
+        if (nav && nav.classList.contains('active')) {
+            var isClickInsideNav = nav.contains(e.target);
+            var isClickOnHamburger = hamburger && hamburger.contains(e.target);
+            if (!isClickInsideNav && !isClickOnHamburger) {
+                closeMenu();
+            }
+        }
+    });
+
+    // Close menu on Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && nav && nav.classList.contains('active')) {
+            closeMenu();
+            hamburger.focus();
+        }
     });
 
     /* ---------- Header Scroll Effect ---------- */
@@ -110,6 +129,129 @@
     if (currentYearEl) {
         currentYearEl.textContent = new Date().getFullYear();
     }
+
+    /* ---------- Card Slider (Value & Process) ---------- */
+    function setupCardSlider(sliderName) {
+        var wrapper = document.querySelector('[data-slider-dots="' + sliderName + '"]');
+        if (!wrapper) return;
+
+        var scrollContainer = wrapper.parentElement.querySelector(
+            sliderName === 'value' ? '.value__grid' : '.process__steps'
+        );
+        var dots = wrapper.querySelectorAll('.slider-dot');
+        var leftArrow = wrapper.parentElement.querySelector('.slider-arrow--left');
+        var rightArrow = wrapper.parentElement.querySelector('.slider-arrow--right');
+
+        if (!scrollContainer || !dots.length) return;
+
+        var cards = scrollContainer.children;
+        var totalCards = cards.length;
+        var currentIndex = 0;
+        var isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+        function updateActiveDot() {
+            if (!isMobile) return;
+
+            var scrollLeft = scrollContainer.scrollLeft;
+            var containerWidth = scrollContainer.offsetWidth;
+            var cardWidth = cards[0] ? cards[0].offsetWidth + 16 : 280; // gap
+
+            currentIndex = Math.round(scrollLeft / cardWidth);
+            currentIndex = Math.max(0, Math.min(currentIndex, totalCards - 1));
+
+            dots.forEach(function (dot, i) {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        function scrollToCard(index) {
+            if (!isMobile || !cards[index]) return;
+
+            var cardWidth = cards[0].offsetWidth + 16; // gap
+            scrollContainer.scrollTo({
+                left: cardWidth * index,
+                behavior: 'smooth'
+            });
+        }
+
+        // Dot clicks
+        dots.forEach(function (dot, i) {
+            dot.addEventListener('click', function () {
+                scrollToCard(i);
+            });
+        });
+
+        // Arrow clicks
+        if (leftArrow) {
+            leftArrow.addEventListener('click', function () {
+                var prev = Math.max(0, currentIndex - 1);
+                scrollToCard(prev);
+            });
+        }
+
+        if (rightArrow) {
+            rightArrow.addEventListener('click', function () {
+                var next = Math.min(totalCards - 1, currentIndex + 1);
+                scrollToCard(next);
+            });
+        }
+
+        // Scroll event to update dots
+        var scrollTimeout;
+        scrollContainer.addEventListener('scroll', function () {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(updateActiveDot, 80);
+        }, { passive: true });
+
+        // Touch swipe support
+        var touchStartX = 0;
+        var touchEndX = 0;
+        var isSwiping = false;
+
+        scrollContainer.addEventListener('touchstart', function (e) {
+            touchStartX = e.changedTouches[0].screenX;
+            isSwiping = true;
+        }, { passive: true });
+
+        scrollContainer.addEventListener('touchmove', function () {
+            isSwiping = true;
+        }, { passive: true });
+
+        scrollContainer.addEventListener('touchend', function (e) {
+            if (!isSwiping) return;
+            isSwiping = false;
+            touchEndX = e.changedTouches[0].screenX;
+            var diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > 50) {
+                if (diff > 0 && currentIndex < totalCards - 1) {
+                    scrollToCard(currentIndex + 1);
+                } else if (diff < 0 && currentIndex > 0) {
+                    scrollToCard(currentIndex - 1);
+                }
+            }
+        }, { passive: true });
+
+        // Update on resize
+        window.addEventListener('resize', function () {
+            isMobile = window.matchMedia('(max-width: 768px)').matches;
+            if (!isMobile) {
+                dots.forEach(function (dot) {
+                    dot.classList.remove('active');
+                });
+            } else {
+                updateActiveDot();
+            }
+        });
+
+        // Initial state
+        if (isMobile) {
+            updateActiveDot();
+        }
+    }
+
+    setupCardSlider('value');
+    setupCardSlider('process');
 
     /* ---------- Testimonial Slider ---------- */
     function setupTestimonialSlider() {
