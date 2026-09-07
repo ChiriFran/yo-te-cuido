@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    IMPORTANTE: El dominio https://yotecuido369.com/ es un placeholder.
+    Reemplazar por el dominio definitivo del sitio antes de publicar.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <!-- Reemplazar con el dominio definitivo -->
+        <loc>https://yotecuido369.com/</loc>
+        <lastmod>2026-09-04</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
+</urlset>

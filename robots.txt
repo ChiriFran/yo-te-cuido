@@ -1,0 +1,5 @@
+# robots.txt - YoTeCuido
+User-agent: *
+Allow: /
+
+Sitemap: https://yotecuido369.com/sitemap.xml
